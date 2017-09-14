@@ -1,18 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+function Clock (props) {
+  var sec = Math.floor(props.elapsed / 1000);
+  const min = Math.floor(sec / 60);
+  sec %= 60;
+  sec = ((sec < 10)?'0':'') + sec;
+  var time = min + ':' + sec
+  return (
+    <div> {time} </div>
+  );
+}
+
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      startedAt: new Date().getTime()
+    }
+  }
+  componentDidMount() {
+    this.interval = setInterval(this.forceUpdate.bind(this), 33);
+    this.setState({
+      startedAt: new Date().getTime()
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render() {
+    var elapsed = new Date().getTime() - this.state.startedAt;
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React!</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <div> Time elapsed </div>
+        <Clock elapsed = {elapsed}/>
+        <button> Start </button>
       </div>
     );
   }
