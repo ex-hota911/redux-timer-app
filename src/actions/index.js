@@ -1,3 +1,4 @@
-export const start = () => ({
-  type: 'START'
+export const start = (startedAt) => ({
+  type: 'START',
+  startedAt
 })

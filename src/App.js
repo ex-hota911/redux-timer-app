@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { createStore } from 'redux'
 import PropTypes from 'prop-types'
 import './App.css';
-import reducer from './reducers'
-import {start} from './actions'
+import { start } from './actions'
 import { connect } from 'react-redux'
 
 const Clock = (props) => {
@@ -21,29 +19,15 @@ Clock.propTypes = {
   elapsed: PropTypes.number.isRequired
 }
 
-function StartButton(props) {
+const StartButton = (props) => {
   return (
-    <button> Start </button>
+    <button onClick={props.onStart} > Start </button>
   )
 }
 
-let store = createStore(reducer);
-store.subscribe(() =>
-  console.log(store.getState())
-)
-
 class AppPres extends Component {
-  constructor() {
-    super();
-    this.state = {
-      startedAt: new Date().getTime()
-    }
-  }
   componentDidMount() {
-    this.interval = setInterval(this.forceUpdate.bind(this), 33);
-    this.setState({
-      startedAt: new Date().getTime()
-    });
+    this.interval = setInterval(this.forceUpdate.bind(this), 100);
   }
 
   componentWillUnmount() {
@@ -51,25 +35,38 @@ class AppPres extends Component {
   }
 
   render() {
-    var elapsed = new Date().getTime() - this.state.startedAt;
+    const elapsed =
+      (this.props.startedAt)
+        ? new Date().getTime() - this.props.startedAt
+        :0;
+
     return (
       <div>
         <div> Time elapsed </div>
         <Clock elapsed = {elapsed}/>
-        <StartButton />
+        <StartButton onStart = {this.props.onStart}/>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+AppPres.propTypes = {
+  startedAt: PropTypes.number
+}
 
+const mapStateToProps = state => {
+  return {
+    startedAt: state.startedAt
+  };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onStart: () => dispatch(start())
-  }
+    onStart: () => {
+      console.log('onStart');
+      dispatch(start(new Date().getTime()))
+    }
+  };
 }
 
 const App = connect(mapStateToProps, mapDispatchToProps)(AppPres);
