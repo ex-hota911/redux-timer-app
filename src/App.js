@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import './App.css';
-import { start, stop } from './actions'
+import { start, stop, reset } from './actions'
 import { connect } from 'react-redux'
+import { notify } from './notification'
 
 const Clock = (props) => {
   var sec = Math.floor(props.time / 1000);
@@ -36,25 +37,47 @@ const StartButton = connect(
 
 
 class AppPres extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      remaningTime: props.remaningTime
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      remaningTime: nextProps.remaningTime
+    })
+  }
+
   componentDidMount() {
-    this.interval = setInterval(this.forceUpdate.bind(this), 100);
+    this.interval = setInterval(this.tick.bind(this), 1000);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  render() {
-    const elapsed =
-      (this.props.startedAt)
-        ? new Date().getTime() - this.props.startedAt
-        :0;
-    const remaningTime = this.props.remaningTime - elapsed;
+  tick() {
+    if (!this.props.isRunning) {
+      return;
+    }
+    var remaningTime =
+      this.props.remaningTime - (new Date().getTime() - this.props.startedAt);
+    if (remaningTime > 0) {
+      this.setState({remaningTime: remaningTime});
+    } else {
+      notify('time is up!', () => {
+      });
+      this.props.onEnd();
+    }
+  }
 
+  render() {
     return (
       <div>
         <div> Time elapsed </div>
-        <Clock time = {remaningTime}/>
+        <Clock time = {this.state.remaningTime}/>
         <StartButton />
       </div>
     );
@@ -73,6 +96,10 @@ const mapStateToProps = state => {
   };
 }
 
-const App = connect(mapStateToProps)(AppPres);
+const mapDispatchToProps = dispatch => ({
+  onEnd: () => dispatch(reset())
+});
+
+const App = connect(mapStateToProps, mapDispatchToProps)(AppPres);
 
 export default App;

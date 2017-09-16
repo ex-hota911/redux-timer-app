@@ -6,3 +6,7 @@ export const start = (startedAt) => ({
 export const stop = () => ({
   type: 'STOP'
 })
+
+export const reset = () => ({
+  type: 'RESET'
+})
