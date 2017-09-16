@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import './App.css';
-import { start } from './actions'
+import { start, stop } from './actions'
 import { connect } from 'react-redux'
 
 const Clock = (props) => {
-  var sec = Math.floor(props.elapsed / 1000);
+  var sec = Math.floor(props.time / 1000);
   const min = Math.floor(sec / 60);
   sec %= 60;
   sec = ((sec < 10)?'0':'') + sec;
@@ -16,14 +16,24 @@ const Clock = (props) => {
 }
 
 Clock.propTypes = {
-  elapsed: PropTypes.number.isRequired
+  time: PropTypes.number.isRequired
 }
 
-const StartButton = (props) => {
+const StartButtonPre = (props) => {
   return (
-    <button onClick={props.onStart} > Start </button>
+    <button onClick={() => props.onClick(props.isRunning)} > {props.label} </button>
   )
 }
+
+const StartButton = connect(
+  state => ({
+    isRunning: !!state.startedAt,
+    label: (state.startedAt)? 'Stop' : 'Start',
+  }),
+  dispatch => ({
+    onClick: isRunning => dispatch(isRunning? stop() : start(new Date().getTime())),
+  }))(StartButtonPre)
+
 
 class AppPres extends Component {
   componentDidMount() {
@@ -39,12 +49,13 @@ class AppPres extends Component {
       (this.props.startedAt)
         ? new Date().getTime() - this.props.startedAt
         :0;
+    const remaningTime = this.props.remaningTime - elapsed;
 
     return (
       <div>
         <div> Time elapsed </div>
-        <Clock elapsed = {elapsed}/>
-        <StartButton onStart = {this.props.onStart}/>
+        <Clock time = {remaningTime}/>
+        <StartButton />
       </div>
     );
   }
@@ -56,19 +67,12 @@ AppPres.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    startedAt: state.startedAt
+    startedAt: state.startedAt,
+    remaningTime: state.remaningTime,
+    isRunning: state.startedAt != null,
   };
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onStart: () => {
-      console.log('onStart');
-      dispatch(start(new Date().getTime()))
-    }
-  };
-}
-
-const App = connect(mapStateToProps, mapDispatchToProps)(AppPres);
+const App = connect(mapStateToProps)(AppPres);
 
 export default App;
