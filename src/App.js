@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import './App.css';
-import { start, stop, reset } from './actions'
+import { start, stop, reset, countUp } from './actions'
 import { connect } from 'react-redux'
 import { notify } from './notification'
 
@@ -39,6 +39,7 @@ const StartButton = connect(
 class AppPres extends Component {
   constructor(props) {
     super(props);
+    // Use local state since it is based on props and current time.
     this.state = {
       remaningTime: props.remaningTime
     }
@@ -68,15 +69,16 @@ class AppPres extends Component {
       this.setState({remaningTime: remaningTime});
     } else {
       notify('time is up!', () => {
+        this.props.onNotificationClicked();
       });
-      this.props.onEnd();
+      (this.props.isWorking)? this.props.onWorkEnd() : this.props.onBreakEnd();
     }
   }
 
   render() {
     return (
-      <div>
-        <div> Time elapsed </div>
+      <div className = {this.props.className}>
+        <div> {this.props.label} Today: {this.props.count} </div>
         <Clock time = {this.state.remaningTime}/>
         <StartButton />
       </div>
@@ -93,11 +95,20 @@ const mapStateToProps = state => {
     startedAt: state.startedAt,
     remaningTime: state.remaningTime,
     isRunning: state.startedAt != null,
+    className: state.isWorking ? 'App-working' : 'App-break',
+    label: state.isWorking ? 'Work' : 'Break',
+    isWorking: state.isWorking,
+    count: state.count
   };
 }
 
 const mapDispatchToProps = dispatch => ({
-  onEnd: () => dispatch(reset())
+  onBreakEnd: () => dispatch(reset()),
+  onWorkEnd: () => {
+    dispatch(countUp());
+    dispatch(reset());
+  },
+  onNotificationClicked: () => dispatch(start(new Date().getTime()))
 });
 
 const App = connect(mapStateToProps, mapDispatchToProps)(AppPres);

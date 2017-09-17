@@ -1,8 +1,16 @@
 //import { combineReducers } from 'redux'
 
-const DEFAULT_TIME = 10 * 1000;
+const DEFAULT_WORK_TIME = 25 * 60 * 1000;
+const DEFAULT_BREAK_TIME = 5 * 60 * 1000;
 
-export default function reducer(state = { remaningTime: DEFAULT_TIME }, action) {
+const reducer = (
+	state = {
+		remaningTime: DEFAULT_WORK_TIME,
+		isWorking: true,
+		count: 0,
+	},
+	action
+) => {
 	switch (action.type) {
 		case 'START':
 		return {
@@ -18,10 +26,19 @@ export default function reducer(state = { remaningTime: DEFAULT_TIME }, action) 
 		}
 		case 'RESET':
 		return {
-			remaningTime: DEFAULT_TIME,
+			...state,
+			remaningTime: (state.isWorking) ? DEFAULT_BREAK_TIME : DEFAULT_WORK_TIME,
+			isWorking: !state.isWorking,
 			startedAt: null
+		}
+		case 'COUNT_UP':
+		return {
+			...state,
+			count: state.count + 1
 		}
 		default:
 		return state;
 	}
 }
+
+export default reducer;

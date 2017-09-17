@@ -10,3 +10,7 @@ export const stop = () => ({
 export const reset = () => ({
   type: 'RESET'
 })
+
+export const countUp = () => ({
+  type: 'COUNT_UP'
+})

@@ -7,6 +7,15 @@
   height: 80px;
 }
 
+.App-working {
+  background-color: #F33;
+  color: #EEE;
+}
+
+.App-break {
+  background-color: #3F3;
+  color: #EEE;
+}
 .App-header {
   background-color: #222;
   height: 150px;
