@@ -35,13 +35,14 @@ const reducer = (
 				startedAt: null
 			}
 		case 'RESET':
+			const isWorking = !state.isWorking;
 			return {
 				...state,
-				remaningTime: (state.isWorking)
+				remaningTime: (isWorking)
 				? state.setting.workTime * MIN_IN_MILLIS
 				: state.setting.breakTime * MIN_IN_MILLIS,
-				isWorking: !state.isWorking,
-				startedAt: null
+				startedAt: null,
+				isWorking,
 			}
 		case 'COUNT_UP':
 			return {
