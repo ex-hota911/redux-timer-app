@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import './App.css';
+import Setting from './Setting';
 import { start, stop, reset, countUp } from './actions'
 import { connect } from 'react-redux'
 import { notify } from './notification'
@@ -81,6 +82,7 @@ class AppPres extends Component {
         <div> {this.props.label} Today: {this.props.count} </div>
         <Clock time = {this.state.remaningTime}/>
         <StartButton />
+        <Setting />
       </div>
     );
   }

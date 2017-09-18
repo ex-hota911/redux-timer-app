@@ -14,3 +14,17 @@ export const reset = () => ({
 export const countUp = () => ({
   type: 'COUNT_UP'
 })
+
+export const edit = () => ({
+  type: 'EDIT'
+})
+
+export const save = () => ({
+  type: 'SAVE'
+})
+
+export const updateForm = (key, value) => ({
+  type: 'UPDATE_FORM',
+  key,
+  value
+})

@@ -1,43 +1,83 @@
 //import { combineReducers } from 'redux'
 
-const DEFAULT_WORK_TIME = 25 * 60 * 1000;
-const DEFAULT_BREAK_TIME = 5 * 60 * 1000;
+const MIN_IN_MILLIS = 60 * 1000;
 
 const reducer = (
 	state = {
-		remaningTime: DEFAULT_WORK_TIME,
+		remaningTime: 25 * MIN_IN_MILLIS,
 		isWorking: true,
 		count: 0,
+		setting: {
+			isEditing: false,
+			workTime: 25,
+			breakTime: 5,
+		},
+		form: {
+			workTime: '25',
+			breakTime: '5',
+		}
 	},
 	action
 ) => {
 	switch (action.type) {
 		case 'START':
-		return {
-			...state,
-			startedAt: action.startedAt,
-			remaningTime: state.remaningTime,
-		}
+			if (state.startedAt) return state;
+			return {
+				...state,
+				startedAt: action.startedAt,
+				remaningTime: state.remaningTime,
+			}
 		case 'STOP':
-		return {
-			...state,
-			remaningTime: state.remaningTime - (new Date().getTime() - state.startedAt),
-			startedAt: null
-		}
+			if (!state.startedAt) return state;
+			return {
+				...state,
+				remaningTime: state.remaningTime - (new Date().getTime() - state.startedAt),
+				startedAt: null
+			}
 		case 'RESET':
-		return {
-			...state,
-			remaningTime: (state.isWorking) ? DEFAULT_BREAK_TIME : DEFAULT_WORK_TIME,
-			isWorking: !state.isWorking,
-			startedAt: null
-		}
+			return {
+				...state,
+				remaningTime: (state.isWorking)
+				? state.setting.workTime * MIN_IN_MILLIS
+				: state.setting.breakTime * MIN_IN_MILLIS,
+				isWorking: !state.isWorking,
+				startedAt: null
+			}
 		case 'COUNT_UP':
-		return {
-			...state,
-			count: state.count + 1
-		}
+			return {
+				...state,
+				count: state.count + 1
+			}
+		case 'EDIT':
+			return {
+				...state,
+				setting: {
+					...state.setting,
+					isEditing: true
+				}
+			}
+		case 'SAVE':
+			const workTime = Number.parseInt(state.form.workTime, 10);
+			return {
+				...state,
+				startedAt: null,
+				isWorking: true,
+				remaningTime: workTime * MIN_IN_MILLIS,
+				setting: {
+					...state.setting,
+					workTime: workTime,
+					breakTime: Number.parseInt(state.form.breakTime, 10),
+					isEditing: false,
+				}
+			}
+		case 'UPDATE_FORM':
+			let newState = {
+				...state,
+			}
+			newState.form[action.key] = action.value
+			return newState;
 		default:
-		return state;
+			return state;
 	}
 }
 
