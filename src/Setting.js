@@ -3,22 +3,14 @@ import { connect } from 'react-redux'
 import { stop, edit, updateForm, save, start, cancel } from './actions'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import ActionSettings from 'material-ui/svg-icons/action/settings';
+import IconButton from 'material-ui/IconButton';
 
-
-const style = {
-  margin: 12,
-	padding: '0 12px',
-};
 
 class SettingPre extends Component {
 	handleChange(key, event) {
 		this.props.onFormValueChange(key, event.target.value);
-	}
-
-	handleClose() {
-
 	}
 
 	render() {
@@ -34,8 +26,11 @@ class SettingPre extends Component {
       />,
 		]
 		return (
-			<span>
-				<RaisedButton onClick={this.props.onEdit} style={style}> Edit Settings </RaisedButton>
+			<span style={{lineHeight: '24px'}}>
+				work: {this.props.workTime} min / break: {this.props.breakTime} min
+				<IconButton onClick={this.props.onEdit}>
+					<ActionSettings />
+				</IconButton>
 				<Dialog
 					title="Configure work/break time"
 					actions={actions}

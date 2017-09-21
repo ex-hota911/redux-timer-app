@@ -1,21 +1,18 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  background-size: 100% 200%;
+  background-image: linear-gradient(to bottom, #F44336 50%, #4CAF50 50%);
+  color: #EEE;
+  transition: background-position 1s;
 }
 
 .App-working {
-  background-color: #F33;
-  color: #EEE;
 }
 
 .App-break {
-  background-color: #3F3;
-  color: #EEE;
+  background-position: 0 -100%;
 }
+
 .App-header {
   background-color: #222;
   height: 150px;

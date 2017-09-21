@@ -6,9 +6,11 @@ import { start, stop, reset, countUp } from './actions'
 import { connect } from 'react-redux'
 import { notify } from './notification'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import {grey100, green500, red500} from 'material-ui/styles/colors';
+import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow.js';
+import AvPause from 'material-ui/svg-icons/av/pause.js';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const Clock = (props) => {
   var sec = Math.floor(props.time / 1000);
@@ -26,20 +28,31 @@ Clock.propTypes = {
 }
 
 const StartButtonPre = (props) => {
+  const start = (
+    <FloatingActionButton mini={true} onClick={props.onStart} tooltip='Start'>
+      <AvPlayArrow />
+    </FloatingActionButton>
+  );
+  const stop = (
+    <FloatingActionButton mini={true} onClick={props.onStop} tooltip='Stop'>
+      <AvPause />
+    </FloatingActionButton>
+  );
+
   return (
     <div>
-      <RaisedButton onClick={() => props.onClick(props.isRunning)} > {props.label} </RaisedButton>
+      {props.isRunning ? stop : start}
     </div>
-  )
+  );
 }
 
 const StartButton = connect(
   state => ({
     isRunning: !!state.startedAt,
-    label: (state.startedAt)? 'Stop' : 'Start',
   }),
   dispatch => ({
-    onClick: isRunning => dispatch(isRunning? stop() : start(new Date().getTime())),
+    onStart: () => dispatch(start(new Date().getTime())),
+    onStop: () => dispatch(stop()),
   }))(StartButtonPre)
 
 
@@ -91,10 +104,10 @@ class AppPres extends Component {
       color: grey100,
     }
     return (
-      <Paper className = {this.props.className} style={style}>
+      <Paper className = {this.props.className} style={style} zDepth={1}>
         <Clock time = {this.state.remaningTime}/>
-        <h2> {this.props.label} Today: {this.props.count} </h2>
         <StartButton />
+        <h2> {this.props.label} Today: {this.props.count} </h2>
         <Setting />
       </Paper>
     );
@@ -110,7 +123,7 @@ const mapStateToProps = state => {
     startedAt: state.startedAt,
     remaningTime: state.remaningTime,
     isRunning: state.startedAt != null,
-    className: state.isWorking ? 'App-working' : 'App-break',
+    className: state.isWorking ? 'App App-working' : 'App App-break',
     label: state.isWorking ? 'Work' : 'Break',
     isWorking: state.isWorking,
     count: state.count
