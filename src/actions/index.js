@@ -23,6 +23,10 @@ export const save = () => ({
   type: 'SAVE'
 })
 
+export const cancel = () => ({
+  type: 'CANCEL'
+})
+
 export const updateForm = (key, value) => ({
   type: 'UPDATE_FORM',
   key,

@@ -71,6 +71,19 @@ const reducer = (
 					isEditing: false,
 				}
 			}
+		case 'CANCEL':
+			return {
+				...state,
+				form: {
+					...state.form,
+					workTime: '' + state.setting.workTime,
+					breakTime: '' + state.setting.breakTime,
+				},
+				setting: {
+					...state.setting,
+					isEditing: false,
+				}
+			}
 		case 'UPDATE_FORM':
 			let newState = {
 				...state,

@@ -5,6 +5,10 @@ import Setting from './Setting';
 import { start, stop, reset, countUp } from './actions'
 import { connect } from 'react-redux'
 import { notify } from './notification'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import {grey100, green500, red500} from 'material-ui/styles/colors';
 
 const Clock = (props) => {
   var sec = Math.floor(props.time / 1000);
@@ -13,7 +17,7 @@ const Clock = (props) => {
   sec = ((sec < 10)?'0':'') + sec;
   var time = min + ':' + sec
   return (
-    <div> {time} </div>
+    <h1> {time} </h1>
   );
 }
 
@@ -23,7 +27,9 @@ Clock.propTypes = {
 
 const StartButtonPre = (props) => {
   return (
-    <button onClick={() => props.onClick(props.isRunning)} > {props.label} </button>
+    <div>
+      <RaisedButton onClick={() => props.onClick(props.isRunning)} > {props.label} </RaisedButton>
+    </div>
   )
 }
 
@@ -77,13 +83,20 @@ class AppPres extends Component {
   }
 
   render() {
+    const style = {
+      width: 400,
+      textAlign: 'center',
+      margin: '0 auto',
+      backgroundColor: this.props.isWorking ? red500 : green500,
+      color: grey100,
+    }
     return (
-      <div className = {this.props.className}>
-        <div> {this.props.label} Today: {this.props.count} </div>
+      <Paper className = {this.props.className} style={style}>
         <Clock time = {this.state.remaningTime}/>
+        <h2> {this.props.label} Today: {this.props.count} </h2>
         <StartButton />
         <Setting />
-      </div>
+      </Paper>
     );
   }
 }
@@ -113,6 +126,12 @@ const mapDispatchToProps = dispatch => ({
   onNotificationClicked: () => dispatch(start(new Date().getTime()))
 });
 
-const App = connect(mapStateToProps, mapDispatchToProps)(AppPres);
+const AppComp = connect(mapStateToProps, mapDispatchToProps)(AppPres);
+
+const App = (props) => (
+  <MuiThemeProvider>
+    <AppComp />
+  </MuiThemeProvider>
+);
 
 export default App;
