@@ -11,6 +11,10 @@ export const reset = () => ({
   type: 'RESET'
 })
 
+export const finish = () => ({
+  type: 'FINISH'
+})
+
 export const countUp = () => ({
   type: 'COUNT_UP'
 })

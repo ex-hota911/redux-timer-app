@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import './App.css';
 import Setting from './Setting';
-import { start, stop, reset, countUp } from './actions'
+import { start, stop, countUp, finish } from './actions'
 import { connect } from 'react-redux'
 import { notify } from './notification'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -99,7 +99,8 @@ class AppPres extends Component {
     const style = {
       width: 400,
       textAlign: 'center',
-      margin: '0 auto',
+      margin: '100px auto',
+      padding: 24,
       backgroundColor: this.props.isWorking ? red500 : green500,
       color: grey100,
     }
@@ -131,10 +132,10 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onBreakEnd: () => dispatch(reset()),
+  onBreakEnd: () => dispatch(finish()),
   onWorkEnd: () => {
     dispatch(countUp());
-    dispatch(reset());
+    dispatch(finish());
   },
   onNotificationClicked: () => dispatch(start(new Date().getTime()))
 });

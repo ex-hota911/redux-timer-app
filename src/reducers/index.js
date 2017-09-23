@@ -20,13 +20,23 @@ const reducer = (
 	action
 ) => {
 	switch (action.type) {
-		case 'START':
+		case 'START': {
 			if (state.startedAt) return state;
+			let remaningTime = state.remaningTime;
+			let isWorking = state.isWorking;
+			if (state.remaningTime === 0) {
+				isWorking = !state.isWorking;
+				remaningTime = (isWorking)
+					? state.setting.workTime * MIN_IN_MILLIS
+					: state.setting.breakTime * MIN_IN_MILLIS
+			}
 			return {
 				...state,
 				startedAt: action.startedAt,
-				remaningTime: state.remaningTime,
+				isWorking,
+				remaningTime,
 			}
+		}
 		case 'STOP':
 			if (!state.startedAt) return state;
 			return {
@@ -34,7 +44,7 @@ const reducer = (
 				remaningTime: state.remaningTime - (new Date().getTime() - state.startedAt),
 				startedAt: null
 			}
-		case 'RESET':
+		case 'RESET': {
 			const isWorking = !state.isWorking;
 			return {
 				...state,
@@ -44,6 +54,14 @@ const reducer = (
 				startedAt: null,
 				isWorking,
 			}
+		}
+		case 'FINISH': {
+			return {
+				...state,
+				remaningTime: 0,
+				startedAt: null,
+			}
+		}
 		case 'COUNT_UP':
 			return {
 				...state,
