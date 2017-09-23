@@ -10,6 +10,7 @@ import Paper from 'material-ui/Paper';
 import {grey100, green500, red500} from 'material-ui/styles/colors';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow.js';
 import AvPause from 'material-ui/svg-icons/av/pause.js';
+import CircularProgress from 'material-ui/CircularProgress';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const Clock = (props) => {
@@ -19,7 +20,7 @@ const Clock = (props) => {
   sec = ((sec < 10)?'0':'') + sec;
   var time = min + ':' + sec
   return (
-    <h1> {time} </h1>
+    <div style = {{fontSize: '40px'}}> {time} </div>
   );
 }
 
@@ -104,9 +105,29 @@ class AppPres extends Component {
       backgroundColor: this.props.isWorking ? red500 : green500,
       color: grey100,
     }
+    const progressStyle = {
+      transform: 'scaleX(-1) rotate(-90deg)',
+      position: 'absolute',
+      left: '50%',
+      marginLeft: '-100px',
+    }
+    const clockStyle = {
+      height: 200,
+      weight: 200,
+      lineHeight: '200px',
+    }
+    const progress = this.state.remaningTime / this.props.total / 60 / 1000 * 100
     return (
       <Paper className = {this.props.className} style={style} zDepth={1}>
-        <Clock time = {this.state.remaningTime}/>
+        <CircularProgress
+          mode = 'determinate'
+          color = {grey100}
+          style = {progressStyle}
+          size = '200'
+          value = {progress} />
+        <div style = {clockStyle}>
+          <Clock time = {this.state.remaningTime}/>
+        </div>
         <StartButton />
         <h2> {this.props.label} Today: {this.props.count} </h2>
         <Setting />
@@ -127,7 +148,8 @@ const mapStateToProps = state => {
     className: state.isWorking ? 'App App-working' : 'App App-break',
     label: state.isWorking ? 'Work' : 'Break',
     isWorking: state.isWorking,
-    count: state.count
+    count: state.count,
+    total: state.isWorking ? state.setting.workTime : state.setting.breakTime
   };
 }
 
