@@ -129,7 +129,7 @@ class AppPres extends Component {
           <Clock time = {this.state.remaningTime}/>
         </div>
         <StartButton />
-        <h2> {this.props.label} Today: {this.props.count} </h2>
+        <h2> {this.props.label} Done: {this.props.count} </h2>
         <Setting />
       </Paper>
     );
