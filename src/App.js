@@ -49,7 +49,7 @@ const StartButtonPre = (props) => {
 
 const StartButton = connect(
   state => ({
-    isRunning: !!state.startedAt,
+    isRunning: !!state.timer.startedAt,
   }),
   dispatch => ({
     onStart: () => dispatch(start(new Date().getTime())),
@@ -62,13 +62,13 @@ class AppPres extends Component {
     super(props);
     // Use local state since it is based on props and current time.
     this.state = {
-      remaningTime: props.remaningTime
+      remainingTime: props.remainingTime
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      remaningTime: nextProps.remaningTime
+      remainingTime: nextProps.remainingTime
     })
   }
 
@@ -84,10 +84,10 @@ class AppPres extends Component {
     if (!this.props.isRunning) {
       return;
     }
-    var remaningTime =
-      this.props.remaningTime - (new Date().getTime() - this.props.startedAt);
-    if (remaningTime > 0) {
-      this.setState({remaningTime: remaningTime});
+    var remainingTime =
+      this.props.remainingTime - (new Date().getTime() - this.props.startedAt);
+    if (remainingTime > 0) {
+      this.setState({remainingTime: remainingTime});
     } else {
       notify('time is up!', () => {
         this.props.onNotificationClicked();
@@ -116,7 +116,7 @@ class AppPres extends Component {
       weight: 200,
       lineHeight: '200px',
     }
-    const progress = this.state.remaningTime / this.props.total / 60 / 1000 * 100
+    const progress = this.state.remainingTime / this.props.total / 60 / 1000 * 100
     return (
       <Paper className = {this.props.className} style={style} zDepth={1}>
         <CircularProgress
@@ -126,7 +126,7 @@ class AppPres extends Component {
           size = '200'
           value = {progress} />
         <div style = {clockStyle}>
-          <Clock time = {this.state.remaningTime}/>
+          <Clock time = {this.state.remainingTime}/>
         </div>
         <StartButton />
         <h2> {this.props.label} Done: {this.props.count} </h2>
@@ -142,14 +142,14 @@ AppPres.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    startedAt: state.startedAt,
-    remaningTime: state.remaningTime,
-    isRunning: state.startedAt != null,
-    className: state.isWorking ? 'App App-working' : 'App App-break',
-    label: state.isWorking ? 'Work' : 'Break',
-    isWorking: state.isWorking,
-    count: state.count,
-    total: state.isWorking ? state.setting.workTime : state.setting.breakTime
+    startedAt: state.timer.startedAt,
+    remainingTime: state.timer.remainingTime,
+    isRunning: state.timer.startedAt != null,
+    className: state.timer.isWorking ? 'App App-working' : 'App App-break',
+    label: state.timer.isWorking ? 'Work' : 'Break',
+    isWorking: state.timer.isWorking,
+    count: state.timer.count,
+    total: state.timer.isWorking ? state.setting.workTime : state.setting.breakTime
   };
 }
 

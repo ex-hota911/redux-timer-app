@@ -4,103 +4,112 @@ const MIN_IN_MILLIS = 60 * 1000;
 
 const reducer = (
 	state = {
-		remaningTime: 25 * MIN_IN_MILLIS,
-		isWorking: true,
-		count: 0,
+		timer: {
+			remainingTime: 25 * MIN_IN_MILLIS,
+			isWorking: true,
+			count: 0,
+		},
 		setting: {
-			isEditing: false,
 			workTime: 25,
 			breakTime: 5,
 		},
-		form: {
-			workTime: '25',
-			breakTime: '5',
-		}
+		form: null,
 	},
 	action
 ) => {
 	switch (action.type) {
 		case 'START': {
-			if (state.startedAt) return state;
-			let remaningTime = state.remaningTime;
-			let isWorking = state.isWorking;
-			if (state.remaningTime === 0) {
-				isWorking = !state.isWorking;
-				remaningTime = (isWorking)
+			if (state.timer.startedAt) return state;
+			let remainingTime = state.timer.remainingTime;
+			let isWorking = state.timer.isWorking;
+			if (state.timer.remainingTime === 0) {
+				isWorking = !state.timer.isWorking;
+				remainingTime = (isWorking)
 					? state.setting.workTime * MIN_IN_MILLIS
 					: state.setting.breakTime * MIN_IN_MILLIS
 			}
 			return {
 				...state,
-				startedAt: action.startedAt,
-				isWorking,
-				remaningTime,
+				timer: {
+					...state.timer,
+					startedAt: action.startedAt,
+					isWorking,
+					remainingTime,
+				},
 			}
 		}
 		case 'STOP':
-			if (!state.startedAt) return state;
+			if (!state.timer.startedAt) return state;
 			return {
 				...state,
-				remaningTime: state.remaningTime - (new Date().getTime() - state.startedAt),
-				startedAt: null
+				timer: {
+					...state.timer,
+					remainingTime: state.timer.remainingTime - (new Date().getTime() - state.timer.startedAt),
+					startedAt: null
+				}
 			}
 		case 'RESET': {
 			const isWorking = !state.isWorking;
 			return {
 				...state,
-				remaningTime: (isWorking)
-				? state.setting.workTime * MIN_IN_MILLIS
-				: state.setting.breakTime * MIN_IN_MILLIS,
-				startedAt: null,
-				isWorking,
+				timer: {
+					...state.timer,
+					remainingTime: (isWorking)
+					? state.setting.workTime * MIN_IN_MILLIS
+					: state.setting.breakTime * MIN_IN_MILLIS,
+					startedAt: null,
+					isWorking,
+				}
 			}
 		}
 		case 'FINISH': {
 			return {
 				...state,
-				remaningTime: 0,
-				startedAt: null,
+				timer: {
+					...state.timer,
+					remainingTime: 0,
+					startedAt: null,
+					isWorking: state.timer.isWorking,
+				},
 			}
 		}
 		case 'COUNT_UP':
 			return {
 				...state,
-				count: state.count + 1
+				timer: {
+					...state.timer,
+					count: state.count + 1
+				}
 			}
 		case 'EDIT':
 			return {
 				...state,
-				setting: {
+				form: {
 					...state.setting,
-					isEditing: true
 				}
 			}
 		case 'SAVE':
-			const workTime = Number.parseInt(state.form.workTime, 10);
+			var workTime = Number.parseInt(state.form.workTime, 10);
+			var breakTime = Number.parseInt(state.form.breakTime, 10);
 			return {
 				...state,
-				startedAt: null,
-				isWorking: true,
-				remaningTime: workTime * MIN_IN_MILLIS,
+				timer: {
+					...state.timer,
+					startedAt: null,
+					isWorking: true,
+					remainingTime: workTime * MIN_IN_MILLIS,
+				},
 				setting: {
 					...state.setting,
-					workTime: workTime,
-					breakTime: Number.parseInt(state.form.breakTime, 10),
-					isEditing: false,
-				}
+					workTime,
+					breakTime,
+				},
+				form: null,
 			}
 		case 'CANCEL':
 			return {
 				...state,
-				form: {
-					...state.form,
-					workTime: '' + state.setting.workTime,
-					breakTime: '' + state.setting.breakTime,
-				},
-				setting: {
-					...state.setting,
-					isEditing: false,
-				}
+				form: null,
 			}
 		case 'UPDATE_FORM':
 			let newState = {

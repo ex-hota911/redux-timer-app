@@ -37,9 +37,9 @@ class SettingPre extends Component {
 		return (
 			<span style={{lineHeight: '24px'}}>
 				<ActionWork color={grey100} style={iconStyle} />
-				{this.props.workTime} min /
+				{this.props.currentWorkTime} min /
 				<PlacesFreeBreakfast color={grey100} style={iconStyle} />
-				{this.props.breakTime} min
+				{this.props.currentBreakTime} min
 				<IconButton onClick={this.props.onEdit}>
 					<ActionSettings color={grey100} style={iconStyle}/>
 				</IconButton>
@@ -52,8 +52,10 @@ class SettingPre extends Component {
 							type="number"
 							style={{marginRight: 12}}
 							value={this.props.workTime}
+							onClick={this.onClick.bind(this)}
 							onChange={this.handleChange.bind(this, 'workTime')}
 							floatingLabelText="Work time (min)"
+							ref={(input) => {this.workTimeInput = input}}
 					/>
 	        <TextField
 							type="number"
@@ -67,11 +69,18 @@ class SettingPre extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
-	isEditing: state.setting.isEditing,
-	workTime: state.form.workTime,
-	breakTime: state.form.breakTime,
-});
+const mapStateToProps = (state) => {
+	var isEditing = !!state.form;
+	var workTime = isEditing? state.form.workTime : null;
+	var breakTime = isEditing? state.form.breakTime : null;
+	return {
+		currentWorkTime: state.setting.workTime,
+		currentBreakTime: state.setting.breakTime,
+		isEditing,
+		workTime,
+		breakTime,
+	}
+};
 
 const mapDispatchToProps = (dispatch) => ({
 	onEdit: () => {
