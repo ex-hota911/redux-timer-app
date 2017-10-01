@@ -1,22 +1,19 @@
 export const start = (startedAt) => ({
   type: 'START',
-  startedAt
+  startedAt,
 })
 
 export const stop = () => ({
   type: 'STOP'
 })
 
-export const reset = () => ({
-  type: 'RESET'
-})
-
 export const finish = () => ({
   type: 'FINISH'
 })
 
-export const countUp = () => ({
-  type: 'COUNT_UP'
+export const setCount = (count) => ({
+  type: 'SET_COUNT',
+  count,
 })
 
 export const edit = () => ({

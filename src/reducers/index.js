@@ -48,20 +48,6 @@ const reducer = (
 					startedAt: null
 				}
 			}
-		case 'RESET': {
-			const isWorking = !state.isWorking;
-			return {
-				...state,
-				timer: {
-					...state.timer,
-					remainingTime: (isWorking)
-					? state.setting.workTime * MIN_IN_MILLIS
-					: state.setting.breakTime * MIN_IN_MILLIS,
-					startedAt: null,
-					isWorking,
-				}
-			}
-		}
 		case 'FINISH': {
 			return {
 				...state,
@@ -73,12 +59,12 @@ const reducer = (
 				},
 			}
 		}
-		case 'COUNT_UP':
+		case 'SET_COUNT':
 			return {
 				...state,
 				timer: {
 					...state.timer,
-					count: state.count + 1
+					count: action.count,
 				}
 			}
 		case 'EDIT':
@@ -89,6 +75,7 @@ const reducer = (
 				}
 			}
 		case 'SAVE':
+			if (!form) return;
 			var workTime = Number.parseInt(state.form.workTime, 10);
 			var breakTime = Number.parseInt(state.form.breakTime, 10);
 			return {

@@ -34,6 +34,7 @@ class SettingPre extends Component {
 			margin: '0 6px',
 			size: '18px',
 		}
+		const selectTarget = (event) => {event.target.select()};
 		return (
 			<span style={{lineHeight: '24px'}}>
 				<ActionWork color={grey100} style={iconStyle} />
@@ -52,8 +53,8 @@ class SettingPre extends Component {
 							type="number"
 							style={{marginRight: 12}}
 							value={this.props.workTime}
-							onClick={this.onClick.bind(this)}
 							onChange={this.handleChange.bind(this, 'workTime')}
+							onClick={selectTarget}
 							floatingLabelText="Work time (min)"
 							ref={(input) => {this.workTimeInput = input}}
 					/>
@@ -61,6 +62,7 @@ class SettingPre extends Component {
 							type="number"
 							value={this.props.breakTime}
 							onChange={this.handleChange.bind(this, 'breakTime')}
+							onClick={selectTarget}
 							floatingLabelText="Break time (min)"
 					/>
 				</Dialog>
