@@ -21,8 +21,8 @@ const Clock = (props) => {
   const time = min + ':' + sec
 
   const containerStyle = {
-    height: 200,
-    weight: 200,
+    height: '200px',
+    width: '200px',
     lineHeight: '200px',
     position: 'relative',
   }
@@ -34,7 +34,7 @@ const Clock = (props) => {
     marginLeft: '-100px',
   }
 
-  const progress = props.remainingTime / props.total / 60 / 1000 * 100
+  const progress = props.time / props.total / 60 / 1000 * 100
 
   return (
     <div style = {containerStyle}>
@@ -42,7 +42,7 @@ const Clock = (props) => {
         mode = 'determinate'
         color = {grey100}
         style = {progressStyle}
-        size = '200'
+        size = {200}
         value = {progress} />
       <div style = {{fontSize: '40px'}}>
         {time}
