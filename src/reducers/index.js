@@ -75,7 +75,7 @@ const reducer = (
 				}
 			}
 		case 'SAVE':
-			if (!form) return;
+			if (!state.form) return;
 			var workTime = Number.parseInt(state.form.workTime, 10);
 			var breakTime = Number.parseInt(state.form.breakTime, 10);
 			return {

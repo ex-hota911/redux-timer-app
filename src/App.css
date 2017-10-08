@@ -1,9 +1,14 @@
 .App {
   text-align: center;
   background-size: 100% 200%;
-  background-image: linear-gradient(to bottom, #F44336 50%, #4CAF50 50%);
+  background-image: linear-gradient(to bottom, #EF9A9A 50%, #A5D6A7 50%);
   color: #EEE;
   transition: background-position 1s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .App-working {
@@ -22,6 +27,9 @@
 
 .App-intro {
   font-size: large;
+}
+
+.container {
 }
 
 @keyframes App-logo-spin {
